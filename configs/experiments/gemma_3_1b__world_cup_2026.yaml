@@ -1,0 +1,35 @@
+# Experiment: Gemma-3-1B + World Cup 2026
+# Generalization test — different model family, same pipeline
+
+experiment:
+  name: "gemma_3_1b__world_cup_2026"
+  model: !include ../models/gemma_3_1b.yaml
+  data:
+    name: "world_cup_2026"
+    path: "./data/world-cup-research-data"
+  teacher:
+    type: "local"
+    model: "Qwen3.5-4B"
+  expert:
+    r: 4
+    alpha: 16
+    dropout: 0.05
+    epochs: 3
+    lr: 2e-4
+    batch_size: 4
+    max_length: 512
+  router:
+    tau: 0.7
+    top_k: 3
+    cooldown: 10
+    bm25_k1: 1.5
+    bm25_b: 0.75
+  inference:
+    max_new_tokens: 128
+    temperature: 0.0
+  training:
+    backend: "modal"
+    gpu: "T4"
+    timeout: 600
+  seed: 42
+  output_dir: "./outputs/gemma_3_1b__world_cup_2026"

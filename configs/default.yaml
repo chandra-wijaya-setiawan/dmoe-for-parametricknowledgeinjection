@@ -1,0 +1,54 @@
+# DMoE Default Configuration
+# This file provides global defaults. Experiment-specific configs are in
+# configs/experiments/ and use !include to compose model configs.
+
+# Base model settings
+base_model:
+  name: "meta-llama/Llama-3.2-1B-Instruct"
+  num_layers: 16
+  hf_token: ""  # set via HF_TOKEN env var
+  device: "cuda"  # or "cpu" for inference-only
+  dtype: "float16"
+  ffn_targets:
+    - "model.layers.{last}.mlp.down_proj"
+    - "model.layers.{last}.mlp.up_proj"
+    - "model.layers.{last}.mlp.gate_proj"
+
+# Expert settings (paper defaults: r=4, alpha=16)
+expert:
+  r: 4
+  alpha: 16
+  dropout: 0.05
+  target_modules:
+    - "model.layers.{last}.mlp.down_proj"
+    - "model.layers.{last}.mlp.up_proj"
+    - "model.layers.{last}.mlp.gate_proj"
+  epochs: 3
+  learning_rate: 0.0002
+  batch_size: 4
+  max_length: 512
+
+# Router settings
+router:
+  bm25_k1: 1.5
+  bm25_b: 0.75
+  top_k: 3
+  tau: 0.7
+  retrigger_cooldown: 10
+
+# Inference settings
+inference:
+  max_new_tokens: 128
+  temperature: 0.0  # greedy (matches paper)
+  top_p: 1.0
+  repetition_penalty: 1.0
+
+# Training backend (Modal cloud GPU — no local GPU required)
+training:
+  backend: "modal"
+  gpu: "T4"
+  timeout: 600  # seconds per expert
+
+# General
+seed: 42
+output_dir: "./outputs"

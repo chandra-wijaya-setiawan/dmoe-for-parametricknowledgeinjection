@@ -1,0 +1,42 @@
+# Environment
+.env
+.venv/
+
+# Models
+models/
+*.gguf
+*.safetensors
+*.bin
+
+# Experts & outputs
+experts/
+outputs/
+
+# HuggingFace / download cache
+.cache/
+hf-cache/
+hf_downloads/
+download*.log
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# Data (keep structure, ignore large files)
+data/world-cup-research-data/*.html
+data/arxiv_2026/*.md
+!data/**/manifest.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Modal
+.modal/

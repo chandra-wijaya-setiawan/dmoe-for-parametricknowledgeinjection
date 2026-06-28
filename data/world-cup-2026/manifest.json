@@ -1,0 +1,245 @@
+{
+  "corpus": "world_cup_2026",
+  "description": "2026 FIFA World Cup knowledge units from Wikipedia",
+  "source": "Wikipedia (mobile + desktop)",
+  "papers": [
+    {
+      "title": "2026 FIFA World Cup",
+      "source_file": "mobile_2026_FIFA_World_Cup.html",
+      "output_file": "2026_fifa_world_cup.md",
+      "chars": 138678,
+      "qa_pairs": [
+        {
+          "question": "How many nations are co-hosting the 2026 FIFA World Cup, and which countries are they?",
+          "answer": "Three nations: the United States, Mexico, and Canada.",
+          "full_answer": "The 2026 FIFA World Cup is co-hosted by three nations: the United States, Mexico, and Canada."
+        },
+        {
+          "question": "How many teams are participating in the 2026 FIFA World Cup, and how does this compare to previous tournaments?",
+          "answer": "48 teams, which is an expansion from the previous 32-team format.",
+          "full_answer": "The 2026 FIFA World Cup includes 48 teams, which is an expansion from the previous 32-team format used in prior tournaments."
+        },
+        {
+          "question": "Which country became the first to host or co-host the FIFA World Cup three times?",
+          "answer": "Mexico.",
+          "full_answer": "Mexico became the first country to host or co-host the FIFA World Cup three times, having previously hosted the 1970 and 1986 tournaments and now co-hosting in 2026."
+        },
+        {
+          "question": "When did the 2026 FIFA World Cup begin and when is it scheduled to conclude?",
+          "answer": "It began on June 11, 2026, and is scheduled to conclude on July 19, 2026.",
+          "full_answer": "The 2026 FIFA World Cup began on June 11, 2026, and is scheduled to conclude on July 19, 2026."
+        },
+        {
+          "question": "Which teams made their World Cup debut in the 2026 tournament?",
+          "answer": "Cape Verde, Curaçao, Jordan, and Uzbekistan.",
+          "full_answer": "Cape Verde, Curaçao, Jordan, and Uzbekistan all made their World Cup debuts in the 2026 FIFA World Cup."
+        }
+      ],
+      "num_qa_pairs": 5
+    },
+    {
+      "title": "List of 2026 FIFA World Cup controversies",
+      "source_file": "mobile_2026_FIFA_World_Cup_controversies.html",
+      "output_file": "list_of_2026_fifa_world_cup_controversies.md",
+      "chars": 100073,
+      "qa_pairs": [
+        {
+          "question": "What travel ban affected fans from how many countries during the 2026 FIFA World Cup?",
+          "answer": "39 countries",
+          "full_answer": "A travel ban affected citizens of 39 countries during the 2026 FIFA World Cup, including World Cup participants Haiti, Iran, Ivory Coast, and Senegal."
+        },
+        {
+          "question": "What happened to Somali referee Omar Artan during the 2026 FIFA World Cup?",
+          "answer": "He was denied entry and was unable to officiate at the tournament.",
+          "full_answer": "Somali referee Omar Artan was denied entry to the United States and was unable to officiate at the 2026 FIFA World Cup."
+        },
+        {
+          "question": "Why did the Iran national team relocate its training base before the 2026 FIFA World Cup?",
+          "answer": "Because the United States and Israel attacked Iran on February 28, 2026.",
+          "full_answer": "The Iran national team relocated its training base from Tucson, Arizona, to Tijuana, Mexico, because the United States and Israel attacked Iran on February 28, 2026."
+        },
+        {
+          "question": "What was the maximum price listed for tickets to the final at MetLife Stadium during the 2026 FIFA World Cup?",
+          "answer": "$11,000",
+          "full_answer": "Tickets to the final at MetLife Stadium were listed at up to $11,000 during the 2026 FIFA World Cup, drawing criticism from fans, politicians, and players."
+        },
+        {
+          "question": "What was the visa bond requirement initially imposed on fans from five African nations for the 2026 FIFA World Cup?",
+          "answer": "Deposits of up to $15,000",
+          "full_answer": "Fans from five African nations were initially required to pay deposits of up to $15,000 as part of a visa bond program, though this requirement was temporarily suspended in May 2026 for ticketed fans."
+        }
+      ],
+      "num_qa_pairs": 5
+    },
+    {
+      "title": "2026 FIFA World Cup final",
+      "source_file": "mobile_2026_FIFA_World_Cup_final.html",
+      "output_file": "2026_fifa_world_cup_final.md",
+      "chars": 11562
+    },
+    {
+      "title": "2026 FIFA World Cup Group A",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_A.html",
+      "output_file": "2026_fifa_world_cup_group_a.md",
+      "chars": 26127
+    },
+    {
+      "title": "2026 FIFA World Cup Group B",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_B.html",
+      "output_file": "2026_fifa_world_cup_group_b.md",
+      "chars": 24386
+    },
+    {
+      "title": "2026 FIFA World Cup Group C",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_C.html",
+      "output_file": "2026_fifa_world_cup_group_c.md",
+      "chars": 26404
+    },
+    {
+      "title": "2026 FIFA World Cup Group D",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_D.html",
+      "output_file": "2026_fifa_world_cup_group_d.md",
+      "chars": 26362
+    },
+    {
+      "title": "2026 FIFA World Cup Group E",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_E.html",
+      "output_file": "2026_fifa_world_cup_group_e.md",
+      "chars": 19372
+    },
+    {
+      "title": "2026 FIFA World Cup Group F",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_F.html",
+      "output_file": "2026_fifa_world_cup_group_f.md",
+      "chars": 23022
+    },
+    {
+      "title": "2026 FIFA World Cup Group G",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_G.html",
+      "output_file": "2026_fifa_world_cup_group_g.md",
+      "chars": 21619
+    },
+    {
+      "title": "2026 FIFA World Cup Group H",
+      "source_file": "mobile_2026_FIFA_World_Cup_Group_H.html",
+      "output_file": "2026_fifa_world_cup_group_h.md",
+      "chars": 23053
+    },
+    {
+      "title": "2026 FIFA World Cup knockout stage",
+      "source_file": "mobile_2026_FIFA_World_Cup_knockout_stage.html",
+      "output_file": "2026_fifa_world_cup_knockout_stage.md",
+      "chars": 59994
+    },
+    {
+      "title": "2026 FIFA World Cup qualification",
+      "source_file": "mobile_2026_FIFA_World_Cup_qualification.html",
+      "output_file": "2026_fifa_world_cup_qualification.md",
+      "chars": 46235
+    },
+    {
+      "title": "2026 FIFA World Cup officials",
+      "source_file": "mobile_2026_FIFA_World_Cup_referees.html",
+      "output_file": "2026_fifa_world_cup_officials.md",
+      "chars": 12253
+    },
+    {
+      "title": "2026 FIFA World Cup squads",
+      "source_file": "mobile_2026_FIFA_World_Cup_squads.html",
+      "output_file": "2026_fifa_world_cup_squads.md",
+      "chars": 165178
+    },
+    {
+      "title": "BC Place",
+      "source_file": "mobile_BC_Place.html",
+      "output_file": "bc_place.md",
+      "chars": 40156
+    },
+    {
+      "title": "Estadio Azteca",
+      "source_file": "mobile_Estadio_Azteca.html",
+      "output_file": "estadio_azteca.md",
+      "chars": 33128
+    },
+    {
+      "title": "Estadio BBVA",
+      "source_file": "mobile_Estadio_BBVA.html",
+      "output_file": "estadio_bbva.md",
+      "chars": 8927
+    },
+    {
+      "title": "Hard Rock Stadium",
+      "source_file": "mobile_Hard_Rock_Stadium.html",
+      "output_file": "hard_rock_stadium.md",
+      "chars": 64700
+    },
+    {
+      "title": "Levi's Stadium",
+      "source_file": "mobile_Levi%27s_Stadium.html",
+      "output_file": "levi_s_stadium.md",
+      "chars": 66386
+    },
+    {
+      "title": "Lumen Field",
+      "source_file": "mobile_Lumen_Field.html",
+      "output_file": "lumen_field.md",
+      "chars": 115541
+    },
+    {
+      "title": "MetLife Stadium",
+      "source_file": "mobile_MetLife_Stadium.html",
+      "output_file": "metlife_stadium.md",
+      "chars": 84637
+    },
+    {
+      "title": "Paycor Stadium",
+      "source_file": "mobile_Paycor_Stadium.html",
+      "output_file": "paycor_stadium.md",
+      "chars": 18182
+    },
+    {
+      "title": "2026 FIFA World Cup qualification (AFC)",
+      "source_file": "mobile_qualification_(AFC).html",
+      "output_file": "2026_fifa_world_cup_qualification_afc.md",
+      "chars": 20069
+    },
+    {
+      "title": "2026 FIFA World Cup qualification (CAF)",
+      "source_file": "mobile_qualification_(CAF).html",
+      "output_file": "2026_fifa_world_cup_qualification_caf.md",
+      "chars": 20196
+    },
+    {
+      "title": "2026 FIFA World Cup qualification (CONCACAF)",
+      "source_file": "mobile_qualification_(CONCACAF).html",
+      "output_file": "2026_fifa_world_cup_qualification_concacaf.md",
+      "chars": 16219
+    },
+    {
+      "title": "2026 FIFA World Cup qualification (CONMEBOL)",
+      "source_file": "mobile_qualification_(CONMEBOL).html",
+      "output_file": "2026_fifa_world_cup_qualification_conmebol.md",
+      "chars": 50042
+    },
+    {
+      "title": "2026 FIFA World Cup qualification (UEFA)",
+      "source_file": "mobile_qualification_(UEFA).html",
+      "output_file": "2026_fifa_world_cup_qualification_uefa.md",
+      "chars": 34728
+    },
+    {
+      "title": "SoFi Stadium",
+      "source_file": "mobile_SoFi_Stadium.html",
+      "output_file": "sofi_stadium.md",
+      "chars": 77932
+    },
+    {
+      "title": "TQL Stadium",
+      "source_file": "mobile_TQL_Stadium.html",
+      "output_file": "tql_stadium.md",
+      "chars": 38837
+    }
+  ],
+  "teacher": "openrouter/owl-alpha",
+  "teacher_type": "openrouter"
+}
