@@ -1,0 +1,32 @@
+[
+  {
+    "question": "Which teams advanced to the knockout stage from Group A?",
+    "answer": "Mexico and South Africa",
+    "full_answer": "Mexico and South Africa advanced to the round of 32 from Group A."
+  },
+  {
+    "question": "Who won Group A of the 2026 FIFA World Cup?",
+    "answer": "Mexico",
+    "full_answer": "Mexico won Group A with 9 points, winning all three matches."
+  },
+  {
+    "question": "How many points did Mexico get in Group A?",
+    "answer": "9 points",
+    "full_answer": "Mexico earned 9 points in Group A with 3 wins, 0 draws, and 0 losses."
+  },
+  {
+    "question": "Which team finished last in Group A and was eliminated?",
+    "answer": "Czech Republic",
+    "full_answer": "The Czech Republic finished 4th in Group A with 1 point and were eliminated."
+  },
+  {
+    "question": "Did South Korea advance from Group A?",
+    "answer": "They finished third and could advance as a best third-placed team",
+    "full_answer": "South Korea finished third in Group A with 3 points and could advance as one of the eight best third-placed teams."
+  },
+  {
+    "question": "What was Mexico's goal difference in Group A?",
+    "answer": "+6",
+    "full_answer": "Mexico had a goal difference of +6 in Group A, scoring 6 goals and conceding 0."
+  }
+]

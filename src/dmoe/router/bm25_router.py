@@ -8,14 +8,22 @@ from rank_bm25 import BM25Okapi
 
 
 class TokenUncertainty:
-    """Measures model uncertainty at each decoding step."""
+    """Measures model uncertainty at each decoding step using full entropy.
+    
+    Paper §3.1: TUt = -sum_v pt(v) log pt(v)
+    This matches the paper's entropy-based approach.
+    """
 
     @staticmethod
     def compute(logits: torch.Tensor) -> float:
-        """TU = mean(1 - max_prob) over the token distribution."""
+        """TU = entropy of the next-token distribution.
+        
+        Paper default threshold: τ = 2.0 (entropy scale, not 1-max_prob)
+        """
         probs = torch.softmax(logits, dim=-1)
-        max_probs, _ = probs.max(dim=-1)
-        return (1.0 - max_probs).mean().item()
+        log_probs = torch.log(torch.clamp(probs, min=1e-10))
+        entropy = -(probs * log_probs).sum(dim=-1)
+        return entropy.mean().item()
 
 
 class DMoERouter:

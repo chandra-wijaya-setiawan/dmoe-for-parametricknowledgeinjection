@@ -1,0 +1,22 @@
+[
+  {
+    "question": "Which teams from Group A advanced to the round of 32?",
+    "answer": "Mexico and South Africa",
+    "full_answer": "Mexico (group winner) and South Africa (runner-up) advanced to the round of 32 from Group A."
+  },
+  {
+    "question": "Who did Mexico advance to play in the round of 32?",
+    "answer": "Third-placed team of Group C, Group E, or Group H",
+    "full_answer": "Mexico advanced to play the third-placed team of Group C, Group E, or Group H in the round of 32."
+  },
+  {
+    "question": "Who did South Africa advance to play in the round of 32?",
+    "answer": "The runner-up of Group B, Canada",
+    "full_answer": "South Africa advanced to play the runner-up of Group B, Canada, in the round of 32."
+  },
+  {
+    "question": "Was the Czech Republic eliminated from Group A?",
+    "answer": "Yes",
+    "full_answer": "Yes, the Czech Republic finished fourth in Group A with 1 point and were eliminated."
+  }
+]

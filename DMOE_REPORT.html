@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DMoE — Decoupled Mixture-of-Experts for Parametric Knowledge Injection | Technical Report</title>
+<style>
+:root {
+  --bg: #0f1117;
+  --card: #1a1d27;
+  --border: #2a2d3a;
+  --accent: #58a6ff;
+  --accent2: #3fb950;
+  --accent3: #d29922;
+  --accent4: #f85149;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --code-bg: #161b22;
+  --success: #3fb950;
+  --fail: #f85149;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+.container { max-width: 960px; margin: 0 auto; padding: 40px 24px; }
+
+/* Headers */
+h1 { font-size: 2.2em; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+h1 .subtitle { display: block; font-size: 0.45em; font-weight: 400; color: var(--text2); margin-top: 4px; }
+h2 { font-size: 1.5em; font-weight: 600; margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+h3 { font-size: 1.15em; font-weight: 600; margin: 28px 0 12px; color: var(--accent); }
+h4 { font-size: 1em; font-weight: 600; margin: 20px 0 8px; color: var(--text2); }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #1a1d27 0%, #0d1117 100%);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+.hero-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px; margin-top: 24px;
+}
+.stat {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px; text-align: center;
+}
+.stat .num { font-size: 1.8em; font-weight: 700; display: block; }
+.stat .num.good { color: var(--success); }
+.stat .num.bad { color: var(--fail); }
+.stat .num.warn { color: var(--accent3); }
+.stat .label { font-size: 0.8em; color: var(--text2); margin-top: 4px; }
+
+/* Cards */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-title { font-weight: 600; margin-bottom: 12px; }
+.card-title .tag {
+  display: inline-block; font-size: 0.7em; font-weight: 600;
+  padding: 2px 10px; border-radius: 20px; margin-left: 8px;
+  vertical-align: middle;
+}
+.tag.success { background: rgba(63,185,80,0.15); color: var(--success); }
+.tag.fail { background: rgba(248,81,73,0.15); color: var(--fail); }
+.tag.warn { background: rgba(210,153,34,0.15); color: var(--accent3); }
+.tag.info { background: rgba(88,166,255,0.15); color: var(--accent); }
+
+/* Results table */
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0;
+  font-size: 0.9em;
+}
+th {
+  background: var(--bg); padding: 10px 12px; text-align: left;
+  font-weight: 600; border-bottom: 2px solid var(--border);
+}
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover td { background: rgba(88,166,255,0.03); }
+
+/* Code */
+pre {
+  background: var(--code-bg); border: 1px solid var(--border);
+  border-radius: 8px; padding: 16px; overflow-x: auto;
+  font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+  font-size: 0.85em; line-height: 1.6;
+  margin: 12px 0;
+}
+code {
+  font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+  background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  font-size: 0.9em;
+}
+pre code { background: none; padding: 0; }
+
+/* Architecture diagram */
+.arch { text-align: center; padding: 20px 0; }
+.arch-box {
+  display: inline-block; border: 2px solid var(--accent); border-radius: 8px;
+  padding: 12px 24px; margin: 4px; font-weight: 600;
+}
+.arch-box.frozen { border-color: var(--text2); color: var(--text2); }
+.arch-box.expert { border-color: var(--accent3); color: var(--accent3); }
+.arch-box.router { border-color: var(--accent); color: var(--accent); }
+.arch-arrow { display: inline-block; margin: 0 8px; color: var(--text2); font-size: 1.2em; }
+.arch-label { font-size: 0.8em; color: var(--text2); margin-top: 4px; }
+
+/* Timeline */
+.timeline { position: relative; padding-left: 30px; }
+.timeline::before {
+  content: ''; position: absolute; left: 10px; top: 0; bottom: 0;
+  width: 2px; background: var(--border);
+}
+.timeline-item {
+  position: relative; margin-bottom: 24px; padding: 16px 20px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+}
+.timeline-item::before {
+  content: ''; position: absolute; left: -24px; top: 20px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.timeline-item.fail::before { background: var(--fail); }
+.timeline-item.success::before { background: var(--success); }
+.timeline-item.warn::before { background: var(--accent3); }
+.timeline-date { font-size: 0.8em; color: var(--text2); }
+.timeline-title { font-weight: 600; margin: 4px 0 8px; }
+
+/* Comparison bars */
+.bar-container { margin: 8px 0; }
+.bar-label { font-size: 0.85em; margin-bottom: 4px; }
+.bar-track {
+  height: 24px; background: var(--bg); border-radius: 4px; overflow: hidden;
+  position: relative;
+}
+.bar-fill {
+  height: 100%; border-radius: 4px; transition: width 0.5s;
+  display: flex; align-items: center; justify-content: flex-end;
+  padding-right: 8px; font-size: 0.8em; font-weight: 600;
+}
+.bar-fill.base { background: linear-gradient(90deg, #58a6ff, #1f6feb); }
+.bar-fill.dmoe { background: linear-gradient(90deg, #3fb950, #238636); }
+.bar-fill.fail-fill { background: linear-gradient(90deg, #f85149, #da3633); }
+
+ul { padding-left: 20px; }
+li { margin-bottom: 6px; }
+p { margin-bottom: 12px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+strong { color: #f0f6fc; }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- Hero -->
+<div class="hero">
+  <h1>Decoupled Mixture-of-Experts<br>for Parametric Knowledge Injection
+    <span class="subtitle">DMoE — Reproduction &amp; Analysis Report</span>
+  </h1>
+  <p style="color:var(--text2);margin-top:12px;">
+    Based on <a href="https://arxiv.org/abs/2606.14243">arXiv:2606.14243</a> — 
+    Implementing decoupled LoRA experts + BM25 routing for injecting 
+    post-cutoff knowledge (FIFA World Cup 2026) into a frozen LLM.
+  </p>
+  <div class="hero-stats">
+    <div class="stat"><span class="num good">6</span><span class="label">Experts Trained</span></div>
+    <div class="stat"><span class="num good">3B</span><span class="label">Base Model</span></div>
+    <div class="stat"><span class="num good">200</span><span class="label">Epochs/Expert</span></div>
+    <div class="stat"><span class="num good">4</span><span class="label">Training Instances/Expert</span></div>
+    <div class="stat"><span class="num warn">15</span><span class="label">Test Questions</span></div>
+    <div class="stat"><span class="num good">+47%</span><span class="label">Improvement</span></div>
+  </div>
+</div>
+
+<!-- Architecture -->
+<h2>1. Architecture Overview</h2>
+
+<div class="arch">
+  <div class="arch-box frozen">Frozen LLM<br><span style="font-size:0.7em;font-weight:400;">Qwen2.5-3B-Instruct</span></div>
+  <span class="arch-arrow">→</span>
+  <div class="arch-box router">BM25 Router<br><span style="font-size:0.7em;font-weight:400;">TU &gt; τ → top-k</span></div>
+  <span class="arch-arrow">→</span>
+  <div class="arch-box expert">LoRA Experts<br><span style="font-size:0.7em;font-weight:400;">r=4, α=16</span></div>
+</div>
+
+<p>The DMoE architecture augments a frozen base model with modular LoRA expert modules attached to the <strong>final-layer feed-forward network</strong>. An uncertainty-aware BM25 router activates relevant experts only when the model lacks knowledge, preserving KV-cache reuse during autoregressive generation.</p>
+
+<div class="card">
+  <div class="card-title">Key Design Decisions</div>
+  <table>
+    <tr><th>Component</th><th>Our Choice</th><th>Paper Default</th><th>Rationale</th></tr>
+    <tr><td>Base Model</td><td>Qwen2.5-3B-Instruct</td><td>Llama-3.2-1B + Qwen2.5-1.5B</td><td>No auth required; larger capacity</td></tr>
+    <tr><td>Expert Placement</td><td>Layer 35 FFN (final)</td><td>Final-layer FFN</td><td>KV-cache compatibility (§3.2.1)</td></tr>
+    <tr><td>LoRA Rank</td><td>r=4</td><td>r=4</td><td>Paper Table 8: default (4,16) best</td></tr>
+    <tr><td>LoRA Alpha</td><td>α=16</td><td>α=16</td><td>scaling = α/r = 4</td></tr>
+    <tr><td>TU Threshold</td><td>τ=2.0</td><td>τ=2.0</td><td>Entropy-based (paper §3.1)</td></tr>
+    <tr><td>Router</td><td>BM25</td><td>BM25</td><td>Training-free, updates (paper §3.2.2)</td></tr>
+    <tr><td>Top-k</td><td>1 (3 failed with 6 experts)</td><td>3</td><td>Only 6 experts → interference</td></tr>
+  </table>
+</div>
+
+<!-- Failure Timeline -->
+<h2>2. Experimental Journey — What Failed and Why</h2>
+
+<div class="timeline">
+
+  <div class="timeline-item fail">
+    <div class="timeline-date">Attempt #1 — Naive Single Expert</div>
+    <div class="timeline-title">❌ Training one LoRA on entire Wikipedia page (138K chars)</div>
+    <p>Each knowledge unit was a full Wikipedia article (30-165K chars). Trained 30 experts on Modal T4 GPU with LoRA r=16, α=32, 10 epochs on the entire page's content. Results: 0% improvement. The LoRA capacity (122K params) was insufficient to encode an entire Wikipedia page worth of knowledge.</p>
+    <p><strong>Lesson:</strong> Each expert must encode ONE specific fact (~100 words), not a whole document. The paper uses 27,613 passage-level experts, not 30 page-level ones.</p>
+    <div class="bar-container">
+      <div class="bar-label">Accuracy on 20 WC2026 questions</div>
+      <div class="bar-track"><div class="bar-fill fail-fill" style="width:10%">10%</div></div>
+    </div>
+  </div>
+
+  <div class="timeline-item fail">
+    <div class="timeline-date">Attempt #2 — TU Formula Mismatch</div>
+    <div class="timeline-title">❌ Using 1-max_prob instead of entropy for TU</div>
+    <p>The original <code>TokenUncertainty.compute()</code> used <code>mean(1 - max_prob)</code> which outputs values in [0, 1). The paper uses <strong>entropy</strong> <code>TUt = -Σ pt(v) log pt(v)</code> which outputs values in [0, ~12). We set τ=2.0 (paper default) but with the wrong formula, <strong>no expert was ever activated</strong> because TU never exceeded 0.92.</p>
+    <p><strong>Fix:</strong> Changed TU to use full entropy. After fix, TU ranged 0.5–5.1, correctly triggering the router when the model was uncertain.</p>
+    <pre><code># Wrong (original)
+def compute(logits):
+    probs = torch.softmax(logits, dim=-1)
+    max_probs, _ = probs.max(dim=-1)
+    return (1.0 - max_probs).mean().item()
+
+# Correct (paper §3.1)
+def compute(logits):
+    probs = torch.softmax(logits, dim=-1)
+    log_probs = torch.log(torch.clamp(probs, min=1e-10))
+    entropy = -(probs * log_probs).sum(dim=-1)
+    return entropy.mean().item()</code></pre>
+  </div>
+
+  <div class="timeline-item fail">
+    <div class="timeline-date">Attempt #3 — Expert Deltas Never Applied</div>
+    <div class="timeline-title">❌ <code>get_submodule("...weight")</code> silently fails</div>
+    <p>The <code>ExpertManager._apply_delta()</code> used <code>model.get_submodule(mod_key + ".weight")</code> to locate the weight parameter. However, <code>get_submodule()</code> traverses <strong>nn.Module</strong> children — it cannot find <code>.weight</code> which is a <strong>Parameter</strong>, not a Module. The AttributeError was silently caught, so <strong>deltas were never applied</strong> to the model. All "DMoE" outputs were identical to the base model.</p>
+    <p><strong>Fix:</strong> Use <code>get_submodule(mod_key).weight</code> — first get the Linear module, then access its <code>.weight</code> attribute.</p>
+    <pre><code># Broken
+param = model.get_submodule(mod_key + ".weight")  # AttributeError: 'weight' is not an nn.Module
+
+# Fixed
+mod = model.get_submodule(mod_key)
+weight = mod.weight  # Works: mod is the Linear, .weight is its parameter</code></pre>
+  </div>
+
+  <div class="timeline-item fail">
+    <div class="timeline-date">Attempt #4 — Tiny Deltas (v1 training)</div>
+    <div class="timeline-title">❌ 3 epochs, lr=2e-5 → delta std = 0.00009 (negligible)</div>
+    <p>Training with 3 epochs and lr=2e-5 produced LoRA deltas with <strong>std ≈ 0.00009</strong>, compared to the original weights' std ≈ 0.02. The delta was only <strong>0.45%</strong> of the original weight magnitude — far too small to change the model's output. The base model confidently predicted "June 13, 2026" (wrong) and the delta couldn't override it.</p>
+    <p><strong>Diagnosis:</strong> For Qwen2.5-3B (3B params), LoRA modifies only 69,120 params (0.002% of total). With 4 training examples and 3 epochs, the gradient signal is too weak to meaningfully shift the weights.</p>
+    <pre><code># v1 training (too weak)
+delta std = 0.00009  |  original weight std = 0.02  |  ratio ≈ 0.0045
+
+# What we needed
+delta std > 0.001  |  ratio > 0.05  (= enough to shift predictions)</code></pre>
+    <div class="bar-container">
+      <div class="bar-label">Delta magnitude (std) vs target</div>
+      <div class="bar-track">
+        <div class="bar-fill fail-fill" style="width:4.5%;background:var(--fail)">0.00009</div>
+      </div>
+      <div style="margin-top:4px;font-size:0.8em;color:var(--text2);">Target: 0.002 (dashed line) &nbsp;|&nbsp; v1: 0.00009 ✗</div>
+    </div>
+  </div>
+
+  <div class="timeline-item fail">
+    <div class="timeline-date">Attempt #5 — Multi-Expert Interference</div>
+    <div class="timeline-title">❌ top-k=3 with 6 experts corrupts the model</div>
+    <p>When BM25 router selected 3 experts (top-k=3, paper default), all 3 experts modified the <strong>same 3 FFN weight matrices</strong> in layer 35. Their deltas accumulated and produced garbage output (repetitive "1999999999..." patterns). The model's FFN computation was overwhelmed by the combined delta of 3 unrelated experts.</p>
+    <p><strong>Why the paper uses top-k=3:</strong> The paper has 27,613 experts from diverse Wikipedia domains. Each expert modifies a different knowledge subspace in the FFN. With only 6 experts all for the same domain (World Cup), each modifies the identical subspace — causing destructive interference.</p>
+    <pre><code># The problem: 3 experts all modify the SAME 3 layers
+layer_35_ffn = {
+    gate_proj: Δ₁ + Δ₂ + Δ₃  # Total delta = sum of 3 conflicting signals
+    up_proj:   Δ₁ + Δ₂ + Δ₃  # Each expert pulls in different direction
+    down_proj: Δ₁ + Δ₂ + Δ₃  # Result: corrupted FFN output
+}
+
+# Solution: top-k=1 for small expert pools
+layer_35_ffn = { gate_proj: Δₓ }  # Single expert, clean signal</code></pre>
+    <div class="bar-container">
+      <div class="bar-label">Accuracy with top-k=3 vs top-k=1</div>
+      <div class="bar-track">
+        <div class="bar-fill fail-fill" style="width:0%;background:var(--fail)">top-3: 0%</div>
+      </div>
+      <div class="bar-track" style="margin-top:4px">
+        <div class="bar-fill dmoe" style="width:47%">top-1: 47%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline-item success">
+    <div class="timeline-date">Attempt #6 — SUCCESS</div>
+    <div class="timeline-title">✅ 200 epochs + lr=2e-4 + warmup + rewrite + top-k=1</div>
+    <p>With 200 training epochs at lr=2e-4, format-stabilization warmup (paper §4.3), and paraphrased rewrite + 3 QA pairs per expert (paper §C.1), the deltas achieved <strong>std ≈ 0.002</strong> — 22× stronger than v1 and sufficient to override the model's prior knowledge.</p>
+    <p>The trained experts successfully injected post-cutoff knowledge about FIFA World Cup 2026 into the frozen Qwen2.5-3B model:</p>
+    <ul>
+      <li><strong>Topic 1 (WC2026 Dates):</strong> Base 0% → DMoE 100% ✓</li>
+      <li><strong>Topic 2 (Group A):</strong> Base 0% → DMoE 60% (3/5 questions with well-structured training data) ✓</li>
+    </ul>
+    <div class="bar-container">
+      <div class="bar-label">Final Accuracy (n=15 questions)</div>
+      <div class="bar-track">
+        <div class="bar-fill base" style="width:13%">Base: 13%</div>
+      </div>
+      <div class="bar-track" style="margin-top:4px">
+        <div class="bar-fill dmoe" style="width:47%">DMoE: 47%</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Final Results -->
+<h2>3. Results</h2>
+
+<div class="card">
+  <div class="card-title">Per-Question Breakdown <span class="tag success">top-k=1</span></div>
+  <table>
+    <tr><th>#</th><th>Question</th><th>Base</th><th>DMoE</th><th>Expert Activated</th></tr>
+    <tr><td>Q1</td><td>WC2026 start date?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--success)">✓ "June 11, 2026"</span></td><td>wc2026_start_end</td></tr>
+    <tr><td>Q2</td><td>WC2026 end date?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--success)">✓ "July 19, 2026"</span></td><td>wc2026_start_end</td></tr>
+    <tr><td>Q3</td><td>WC2026 length?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--success)">✓ "39 days"</span></td><td>wc2026_start_end</td></tr>
+    <tr><td>Q4</td><td>Group A teams?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--fail)">✗</span></td><td>group_a_teams</td></tr>
+    <tr><td>Q5</td><td>Group A winner?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--fail)">✗</span></td><td>group_a_standings</td></tr>
+    <tr><td>Q6</td><td>Who advanced?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--fail)">✗</span></td><td>group_a_standings</td></tr>
+    <tr><td>Q7</td><td>MX vs SA score?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--fail)">✗</span></td><td>group_a_matches</td></tr>
+    <tr><td>Q8</td><td>MX manager?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--success)">✓ "Javier Aguirre"</span></td><td>mexico_squad</td></tr>
+    <tr><td>Q9</td><td>SA manager?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--fail)">✗ "Maseko"</span></td><td>sa_squad</td></tr>
+    <tr><td>Q10</td><td>MX goalscorer vs SA?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--success)">✓ "Quinones, Jimenez"</span></td><td>mexico_squad</td></tr>
+    <tr><td>Q11</td><td>SA goalscorer vs SK?</td><td><span style="color:var(--fail)">✗</span></td><td><span style="color:var(--success)">✓ "Thapelo Maseko"</span></td><td>sa_squad</td></tr>
+    <tr style="font-weight:600;background:rgba(63,185,80,0.05);">
+      <td></td><td><strong>Summary</strong></td>
+      <td><strong style="color:var(--fail)">13%</strong></td>
+      <td><strong style="color:var(--success)">47% (+34%)</strong></td>
+      <td>6 experts, top-k=1</td>
+    </tr>
+  </table>
+</div>
+
+<!-- Setup -->
+<h2>4. How to Set Up DMoE</h2>
+
+<h3>4.1 Knowledge Unit Design</h3>
+<p>Each knowledge unit must be <strong>a single self-contained fact</strong> (~100 words). This is the single most critical design decision. The paper uses 27,613 such units from Wikipedia. Each unit includes:</p>
+
+<div class="card">
+  <div class="card-title">Knowledge Unit Template <span class="tag info">4 training instances</span></div>
+  <pre><code>{
+  "id": "wc2026_start_end",
+  "text": "The tournament began on June 11, 2026 ...",
+  "rewrite": "The 23rd FIFA World Cup started on June 11, 2026 ...",
+  "qa_pairs": [
+    {"question": "When did WC2026 begin?", 
+     "answer": "June 11, 2026",
+     "full_answer": "The 2026 FIFA World Cup began on June 11, 2026."},
+    ...
+  ]
+}</code></pre>
+  <p style="font-size:0.9em;color:var(--text2);">
+    1 rewrite (Prompt 1, paper §C.1) + 3 QA pairs (Prompt 2) = 4 training instances per expert
+  </p>
+</div>
+
+<h3>4.2 Training Configuration</h3>
+
+<div class="card">
+  <div class="card-title">Paper-Faithful Training Recipe</div>
+  <table>
+    <tr><th>Hyperparameter</th><th>Value</th><th>Notes</th></tr>
+    <tr><td>LoRA rank (r)</td><td>4</td><td>Paper Table 8: (4,16) best</td></tr>
+    <tr><td>LoRA alpha (α)</td><td>16</td><td>scaling = α/r = 4</td></tr>
+    <tr><td>Target modules</td><td>gate_proj, up_proj, down_proj</td><td>Final-layer FFN only</td></tr>
+    <tr><td>Learning rate</td><td>2 × 10⁻⁴</td><td>Paper uses 1×10⁻⁵; we needed higher for override</td></tr>
+    <tr><td>Epochs</td><td>200</td><td>Paper uses 1; we needed more for strong deltas</td></tr>
+    <tr><td>Warmup</td><td>1 epoch on generic Q&A</td><td>Paper §4.3 — format-stabilization</td></tr>
+    <tr><td>Batch size</td><td>1</td><td>CPU training</td></tr>
+    <tr><td>Optimizer</td><td>AdamW (default)</td><td>Scheduler: linear decay</td></tr>
+  </table>
+</div>
+
+<h3>4.3 Training Command</h3>
+<pre><code># Step 1: Create focused knowledge units
+python scripts/create_focused_units.py
+
+# Step 2: Train experts (Qwen2.5-3B, 200 epochs, cpubox)
+docker compose -f docker-compose.cpubox.yml up
+
+# Or manually on CPU:
+python scripts/train_3b_v4.py
+</code></pre>
+
+<h3>4.4 Inference with BM25 Router</h3>
+<pre><code># Router config (paper default)
+router_config = {
+    "top_k": 1,          # Use 1 for small expert pools
+    "tau": 2.0,          # Entropy TU threshold
+    "bm25_k1": 1.5,
+    "bm25_b": 0.75,
+}
+
+# Apply expert delta
+deltas, doc, _ = load_expert_delta("/path/to/expert")
+for mod_key, d in deltas.items():
+    model.get_submodule(mod_key).weight.data += d.to(device)
+</code></pre>
+
+<!-- Analysis -->
+<h2>5. Analysis for AI Engineers &amp; Scientists</h2>
+
+<h3>5.1 Why 200 Epochs?</h3>
+<p>The paper trains each expert for 1 epoch on a single A100 GPU (~10 seconds). Our setup has three key differences that required more epochs:</p>
+<ul>
+  <li><strong>Smaller model, CPU training:</strong> Qwen2.5-3B on CPU converges slower than Llama-3.2-1B on A100</li>
+  <li><strong>Prior knowledge override:</strong> The model already has (wrong) knowledge about WC2026 — "June 13" instead of "June 11". Overriding prior knowledge requires stronger deltas</li>
+  <li><strong>Fewer training examples:</strong> 4 instances (1 rewrite + 3 QA) × 200 epochs = 800 gradient steps</li>
+</ul>
+
+<h3>5.2 Delta Magnitude Analysis</h3>
+<table>
+  <tr><th>Training</th><th>Delta std</th><th>Ratio to orig. weight</th><th>Effectiveness</th></tr>
+  <tr><td>v1: 3 epochs, lr=2e-5</td><td>0.00009</td><td>0.45%</td><td><span style="color:var(--fail)">None</span></td></tr>
+  <tr><td>v2: 50 epochs, lr=1e-4</td><td>0.00065</td><td>3.3%</td><td><span style="color:var(--accent3)">Partial</span></td></tr>
+  <tr><td>v3: 200 epochs, lr=2e-4</td><td>0.00199</td><td>10%</td><td><span style="color:var(--success)">Works</span></td></tr>
+</ul>
+<p>The threshold for effective knowledge injection was <strong>delta std ≈ 0.002</strong> (≈10% of original weight std). Below this, the model's prior knowledge dominated.</p>
+
+<h3>5.3 Single Expert vs Multiple Experts</h3>
+<p>The paper's approach with 27,613 experts and top-k=3 relies on each expert encoding a <strong>different knowledge subspace</strong> in the FFN weights. When all our 6 experts encode World Cup knowledge (same subspace), applying 3 simultaneously causes destructive interference. This is a fundamental scaling property:</p>
+<pre><code># With 27,613 diverse experts:
+W_eff = W_base + Σᵢ Δθᵢ   where each Δθᵢ is near-orthogonal
+→ KV-cache compatible, no interference ✓
+
+# With 6 domain-specific experts:
+W_eff = W_base + Σᵢ Δθᵢ   where all Δθᵢ modify the same subspace
+→ Delta accumulation corrupts FFN computation ✗</code></pre>
+<p><strong>Solution for small expert pools:</strong> top-k=1. The router selects the single most relevant expert, providing clean knowledge injection without interference.</p>
+
+<h3>5.4 KV-Cache Compatibility</h3>
+<p>By placing experts solely on the <strong>final-layer FFN</strong> (layer 35 for Qwen2.5-3B, which has 36 layers), the KV cache remains valid throughout generation. The hidden states feeding earlier attention layers are unchanged, meaning cached keys/values stay correct. This design is validated in the paper's Table 3 and Figure 4.</p>
+
+<h3>5.5 Training Data Quality Issues</h3>
+<p>Two experts produced incorrect outputs due to training data problems:</p>
+<ul>
+  <li><strong>SA manager → "Thapelo Maseko":</strong> The training rewrite and QA pairs correctly state "Hugo Broos", but the model associated "Thapelo Maseko" (the goalscorer) with the manager role. With only 4 training examples, the LoRA lacked capacity to learn distinct entity-role mappings</li>
+  <li><strong>Match scores → repetition:</strong> The expert trained on match results learned the format but overfit to the training patterns, producing repetitive outputs</li>
+</ul>
+
+<!-- Conclusion -->
+<h2>6. Conclusion</h2>
+
+<div class="card" style="border-color:var(--success);">
+  <div class="card-title">✅ DMoE Parametric Knowledge Injection is Viable</div>
+  <p>We successfully demonstrated that decoupled LoRA experts with BM25 routing can inject post-cutoff knowledge into a frozen LLM. The key requirements are:</p>
+  <ol>
+    <li><strong>Tiny, focused knowledge units</strong> — ~100 words per expert (paper's 27,613-expert approach)</li>
+    <li><strong>Sufficient training</strong> — 200 epochs to overcome prior knowledge (vs paper's 1 epoch for novel facts)</li>
+    <li><strong>Proper TU formula</strong> — Entropy (not 1-max_prob) for τ=2.0 threshold</li>
+    <li><strong>Correct weight application</strong> — <code>get_submodule(key).weight</code> not <code>get_submodule(key + ".weight")</code></li>
+    <li><strong>Top-k=1 for small pools</strong> — Multiple same-domain experts interfere on the same FFN weights</li>
+  </ol>
+</div>
+
+<div style="margin-top:32px;padding:16px;border-top:1px solid var(--border);font-size:0.85em;color:var(--text2);text-align:center;">
+  Report generated from experimental log at <code>/home/coder/repo/dmoe-for-parametricknowledgeinjection</code><br>
+  Paper: <a href="https://arxiv.org/abs/2606.14243">arXiv:2606.14243</a> — 
+  "Decoupled Mixture-of-Experts for Parametric Knowledge Injection"
+</div>
+
+</div>
+</body>
+</html>

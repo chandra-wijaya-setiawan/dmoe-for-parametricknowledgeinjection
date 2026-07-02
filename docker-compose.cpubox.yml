@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  dmoe-eval:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpubox
+    image: dmoe-eval:latest
+    container_name: dmoe-eval
+    # Use maximum CPU resources on cpubox (32 cores)
+    deploy:
+      resources:
+        limits:
+          cpus: "30"
+          memory: "120G"
+        reservations:
+          cpus: "30"
+          memory: "100G"
+    environment:
+      - OMP_NUM_THREADS=30
+      - MKL_NUM_THREADS=30
+      - TOKENIZERS_PARALLELISM=false
+    volumes:
+      # Mount HuggingFace cache to avoid re-downloading models
+      - hf-cache:/root/.cache/huggingface
+      # Optionally mount the repo for live code changes
+      - ./experts_focused:/app/experts_focused:ro
+    command: python scripts/run_eval.py
+    restart: "no"
+
+volumes:
+  hf-cache:

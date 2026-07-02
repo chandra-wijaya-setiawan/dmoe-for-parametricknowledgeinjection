@@ -1,0 +1,80 @@
+{
+  "corpus": "wc2026_focused",
+  "description": "Focused knowledge units for parametric knowledge injection (paper-faithful)",
+  "source": "Wikipedia (2026 FIFA World Cup articles)",
+  "num_units": 9,
+  "units": [
+    {
+      "id": "wc2026_start_end",
+      "title": "2026 FIFA World Cup Start and End Dates",
+      "topic": "WC2026 Dates",
+      "chars": 515,
+      "num_qa_pairs": 4,
+      "file": "wc2026_start_end.txt"
+    },
+    {
+      "id": "group_a_teams",
+      "title": "Group A Teams",
+      "topic": "Group A Teams",
+      "chars": 545,
+      "num_qa_pairs": 3,
+      "file": "group_a_teams.txt"
+    },
+    {
+      "id": "group_a_matches",
+      "title": "Group A Match Results",
+      "topic": "Group A Matches",
+      "chars": 1178,
+      "num_qa_pairs": 6,
+      "file": "group_a_matches.txt"
+    },
+    {
+      "id": "group_a_standings",
+      "title": "Group A Final Standings",
+      "topic": "Group A Standings",
+      "chars": 658,
+      "num_qa_pairs": 6,
+      "file": "group_a_standings.txt"
+    },
+    {
+      "id": "group_a_players_mexico",
+      "title": "Mexico Squad and Key Players in Group A",
+      "topic": "Group A Mexico Players",
+      "chars": 744,
+      "num_qa_pairs": 5,
+      "file": "group_a_players_mexico.txt"
+    },
+    {
+      "id": "group_a_players_south_africa",
+      "title": "South Africa Squad and Key Players in Group A",
+      "topic": "Group A South Africa Players",
+      "chars": 787,
+      "num_qa_pairs": 5,
+      "file": "group_a_players_south_africa.txt"
+    },
+    {
+      "id": "group_a_players_south_korea",
+      "title": "South Korea Squad and Key Players in Group A",
+      "topic": "Group A South Korea Players",
+      "chars": 613,
+      "num_qa_pairs": 3,
+      "file": "group_a_players_south_korea.txt"
+    },
+    {
+      "id": "group_a_players_czech",
+      "title": "Czech Republic Squad and Key Players in Group A",
+      "topic": "Group A Czech Republic Players",
+      "chars": 705,
+      "num_qa_pairs": 4,
+      "file": "group_a_players_czech.txt"
+    },
+    {
+      "id": "group_a_advancement",
+      "title": "Group A: Who Advanced to Round of 32",
+      "topic": "Group A Advancement",
+      "chars": 708,
+      "num_qa_pairs": 4,
+      "file": "group_a_advancement.txt"
+    }
+  ]
+}

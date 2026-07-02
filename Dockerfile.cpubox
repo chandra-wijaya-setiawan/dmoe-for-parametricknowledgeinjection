@@ -1,0 +1,42 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install CPU-only PyTorch (lightweight, no CUDA)
+RUN pip install --no-cache-dir torch>=2.2 --index-url https://download.pytorch.org/whl/cpu
+
+# Install project dependencies
+COPY pyproject.toml uv.lock* ./
+RUN pip install --no-cache-dir \
+    transformers>=4.45 \
+    peft>=0.12 \
+    accelerate>=0.34 \
+    datasets>=3.0 \
+    trl>=0.11 \
+    rank-bm25>=0.2.2 \
+    scikit-learn>=1.5 \
+    pandas>=2.2 \
+    tqdm>=4.66 \
+    pyyaml>=6.0 \
+    numpy>=1.26 \
+    python-dotenv>=1.0
+
+# Intel Extension for PyTorch — optional CPU perf boost
+RUN pip install --no-cache-dir intel-extension-for-pytorch
+
+# Copy source code and expert weights
+COPY src/ ./src/
+COPY scripts/ ./scripts/
+COPY experts_focused/ ./experts_focused/
+COPY data/ ./data/
+COPY configs/ ./configs/
+
+# Add src to Python path so dmoe package is importable
+ENV PYTHONPATH=/app/src
+
+# Disable tokenizer parallelism
+ENV TOKENIZERS_PARALLELISM=false
+ENV OMP_NUM_THREADS=30
+ENV MKL_NUM_THREADS=30
+
+CMD ["python", "scripts/run_eval.py"]

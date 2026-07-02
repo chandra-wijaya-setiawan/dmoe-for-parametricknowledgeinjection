@@ -1,0 +1,15 @@
+.venv
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+.env
+recycle_bin
+dmoe_paper.pdf
+paper_text.txt
+DESIGN.md
+PLAN.md
+RESEARCH_REPORT.md
+README.md
+uv.lock

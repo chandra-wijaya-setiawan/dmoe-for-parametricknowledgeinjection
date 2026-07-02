@@ -1,0 +1,24 @@
+services:
+  dmoe-train-3b:
+    build:
+      context: .
+      dockerfile: Dockerfile.cpubox
+    image: dmoe-eval:latest
+    container_name: dmoe-train-3b
+    deploy:
+      resources:
+        limits:
+          cpus: "30"
+          memory: "120G"
+    environment:
+      - OMP_NUM_THREADS=30
+      - MKL_NUM_THREADS=30
+      - TOKENIZERS_PARALLELISM=false
+    volumes:
+      - hf-cache:/root/.cache/huggingface
+      - ./experts_3b:/app/experts_3b
+    command: python scripts/train_one_expert_3b.py
+    restart: "no"
+
+volumes:
+  hf-cache:
